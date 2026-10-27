@@ -23,7 +23,7 @@ export interface OrderView {
   tickets: Ticket[];
 }
 
-export type ErrorStatus = 400 | 401 | 404 | 409;
+export type ErrorStatus = 400 | 401 | 404 | 409 | 429;
 
 export type Result<T> =
   | { ok: true; value: T }

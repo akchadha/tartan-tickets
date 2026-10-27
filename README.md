@@ -51,13 +51,15 @@ Other commands:
 - "Simulate declined payment" releases the seats at once.
 - The server computes the price from its own data and ignores any price the browser sends (SEC-8).
 - Names are required and at most 80 characters, checked on the server.
+- SEC-16: a buyer (by typed name, ignoring capitals and extra spaces) who starts a 6th checkout
+  for one event within 10 minutes is refused and blocked from all checkouts for 30 minutes.
 
 ### API
 
 | Method | Endpoint | Success | Errors |
 |---|---|---|---|
 | GET | /api/events | 200 | — |
-| POST | /api/orders | 201 (held) | 400 bad seats/name/body, 401 no name, 404 unknown event, 409 sold out / not enough seats / not on sale |
+| POST | /api/orders | 201 (held) | 400 bad seats/name/body, 401 no name, 404 unknown event, 409 sold out / not enough seats / not on sale, 429 too many checkouts (SEC-16) |
 | GET | /api/orders/{id} | 200 | 404 |
 | POST | /api/orders/{id}/pay | 200 (paid, with tickets) | 404, 409 already paid / hold expired / not held |
 | POST | /api/orders/{id}/decline | 200 (released) | 404, 409 not held |
@@ -102,5 +104,35 @@ spec says, so one person can place several orders (open question for the spec).
 | S3-AC5: sold out during checkout → waitlist | `tests/story3/S3-AC5.sold-out.test.ts`, message test in `S3-ui.test.tsx` |
 | API §5, SEC-8 price, §8 concurrency (50 buyers, 1 seat) | `tests/story3/S3-api.test.ts` |
 | UX §6: Buy disabled after one click | double-click test in `S3-ui.test.tsx` |
+| SEC-16: more than 5 checkouts per event in 10 minutes blocks for 30 minutes | `tests/security/SEC-16.checkout-hoarding.test.ts` |
 
 Test runs before and after the Story 3 code are saved in `docs/evidence/`.
+
+## Security spec audit
+
+Each requirement in `docs/SECURITY_SPEC.md`, judged against today's build (Stories 1 and 3, HW3 scope: no sign-in, no database, no payment provider).
+
+| Req | Satisfied? | Why (one line) |
+|---|---|---|
+| SEC-1 | Partly | No passwords are stored anywhere, but there is no CMU SSO; buyers type a name (HW3 scope). |
+| SEC-2 | Not at all | There are no sessions, so nothing expires after 8 hours. |
+| SEC-3 | Partly | Vercel serves the site over HTTPS and redirects HTTP; the app itself sets no HSTS header. |
+| SEC-4 | Not at all | No roles or club membership exist yet; there are no officer features to protect. |
+| SEC-5 | Not at all | No club-owned resources (attendee lists, refunds) exist, and no access attempts are logged. |
+| SEC-6 | Partly | Order ids are random and unknown ids return 404, but anyone holding an order id can view it; there is no owner check without sign-in. |
+| SEC-7 | Partly | No card data is ever collected (payments are simulated), but Stripe Checkout is not connected. |
+| SEC-8 | Fully | The server computes every total from the stored price and ignores browser-sent prices (test: `S3 SEC-8 ignores any price or total sent by the browser`). |
+| SEC-9 | Not at all | There are no Stripe webhooks yet, so there are no signatures to verify. |
+| SEC-10 | Not at all | No Stripe events are processed; the closest rule built is that paying an order twice is refused. |
+| SEC-11 | Fully | No Stripe keys exist yet, and a scan of the repository found no keys of any kind. |
+| SEC-12 | Not at all | Clubs have no connected Stripe accounts, so there is no approval flow. |
+| SEC-13 | Partly | Each QR code is a random 128-bit token with no personal data, but nothing looks tokens up yet (check-in is not built). |
+| SEC-14 | Not at all | Check-in (Story 6) is not built. |
+| SEC-15 | Not at all | Check-in (Story 6) is not built, so invalid scans are not counted. |
+| SEC-16 | Partly | The server now refuses a buyer's 6th checkout for one event within 10 minutes (status 429) and blocks that buyer's checkouts for 30 minutes (tests in `tests/security/SEC-16.checkout-hoarding.test.ts`). Still missing: real accounts, since the "account" is a typed name and typing a different name gets around it (needs sign-in); and a shared store, since each Vercel server copy keeps its own count (needs a database or shared cache). |
+| SEC-17 | Partly | Only the typed name is collected; there is no Andrew email or Stripe payment id yet. |
+| SEC-18 | Not at all | There is no 90-day removal rule; data only disappears because memory resets on each deploy. |
+| SEC-19 | Not at all | There is no attendee export yet. |
+| SEC-20 | Fully | All event text and typed names are shown as plain text (tests: `S1-AC1 SEC-20 …`, `S3 SEC-20 …`). |
+| SEC-21 | Not at all | There is no audit log. |
+| SEC-22 | Not at all | There is no audit log. |

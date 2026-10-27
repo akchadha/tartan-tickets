@@ -1,10 +1,16 @@
 import { randomBytes, randomUUID } from "node:crypto";
 import type { EventRecord } from "@/lib/events/types";
+import { formatTime } from "@/lib/events/format";
 import type { OrderStatus, OrderView, Result, Ticket } from "./types";
 
 export const MAX_SEATS_PER_ORDER = 4; // Story 3, AC1
 export const HOLD_MINUTES = 10; // Story 3, AC2
 export const MAX_NAME_LENGTH = 80; // assumption 6
+
+// SEC-16: more than 5 checkouts for one event within 10 minutes blocks that buyer for 30 minutes.
+export const MAX_CHECKOUTS_PER_EVENT = 5;
+export const CHECKOUT_WINDOW_MINUTES = 10;
+export const CHECKOUT_BLOCK_MINUTES = 30;
 
 /** Everything the browser sends. All of it is untrusted and checked here, on the server. */
 export interface CheckoutInput {
@@ -34,7 +40,7 @@ interface Order {
   tickets: Ticket[];
 }
 
-const fail = (status: 400 | 401 | 404 | 409, code: string, message: string) =>
+const fail = (status: 400 | 401 | 404 | 409 | 429, code: string, message: string) =>
   ({ ok: false, status, code, message }) as const;
 
 /**
@@ -46,6 +52,12 @@ export function createTicketing(opts: { events: EventRecord[]; now?: () => Date 
   const now = () => (opts.now ?? (() => new Date()))().getTime();
   const events = new Map(opts.events.map((e) => [e.eventId, { ...e }]));
   const orders = new Map<string, Order>();
+  // SEC-16 bookkeeping, per buyer: when they started checkouts (per event) and when a block ends.
+  const checkoutStarts = new Map<string, number[]>(); // key: buyer + "\u0000" + eventId
+  const blockedUntil = new Map<string, number>(); // key: buyer
+
+  /** The "account" under the HW3 scope is the typed name, compared without case or extra spaces. */
+  const accountKey = (name: string) => name.replace(/\s+/g, " ").trim().toLowerCase();
 
   /** A hold whose 10 minutes have passed is expired, checked every time it matters. */
   function refresh(o: Order): Order {
@@ -77,6 +89,14 @@ export function createTicketing(opts: { events: EventRecord[]; now?: () => Date 
     };
   }
 
+  function tooManyCheckouts(blockEnds: number) {
+    return fail(
+      429,
+      "too_many_checkouts",
+      `Too many checkouts in a short time. You can try again at ${formatTime(new Date(blockEnds).toISOString())}.`,
+    );
+  }
+
   function find(orderId: string): Order | undefined {
     const o = orders.get(orderId);
     return o && refresh(o);
@@ -100,8 +120,23 @@ export function createTicketing(opts: { events: EventRecord[]; now?: () => Date 
       if (seats > MAX_SEATS_PER_ORDER)
         return fail(400, "too_many_seats", `You can buy at most ${MAX_SEATS_PER_ORDER} seats per order.`);
 
+      const account = accountKey(name);
+      const blockEnds = blockedUntil.get(account) ?? 0;
+      if (now() < blockEnds) return tooManyCheckouts(blockEnds);
+
       const event = typeof input.eventId === "string" ? events.get(input.eventId) : undefined;
       if (!event) return fail(404, "event_not_found", "That event doesn't exist.");
+
+      // SEC-16: count this buyer's checkouts for this event in the last 10 minutes.
+      const startsKey = account + "\u0000" + event.eventId;
+      const windowStart = now() - CHECKOUT_WINDOW_MINUTES * 60_000;
+      const recent = (checkoutStarts.get(startsKey) ?? []).filter((t) => t > windowStart);
+      checkoutStarts.set(startsKey, recent);
+      if (recent.length >= MAX_CHECKOUTS_PER_EVENT) {
+        const ends = now() + CHECKOUT_BLOCK_MINUTES * 60_000;
+        blockedUntil.set(account, ends);
+        return tooManyCheckouts(ends);
+      }
       if (event.status !== "published" || Date.parse(event.startsAt) <= now())
         return fail(409, "not_on_sale", "Tickets for this event aren't on sale.");
 
@@ -122,6 +157,7 @@ export function createTicketing(opts: { events: EventRecord[]; now?: () => Date 
         tickets: [],
       };
       orders.set(order.orderId, order);
+      recent.push(now());
       return { ok: true, value: view(order) };
     },
 

@@ -1,0 +1,17 @@
+# SEC-16 tests AFTER the fix
+# Command: npm test   Date: 2026-10-27T03:00Z
+
+ ✓ tests/security/SEC-16.checkout-hoarding.test.ts > SEC-16 checkout hoarding limit > a student who starts a sixth checkout for the same event within ten minutes is refused and blocked for thirty minutes 5ms
+ ✓ tests/security/SEC-16.checkout-hoarding.test.ts > SEC-16 checkout hoarding limit > five checkouts spread over more than ten minutes are not blocked 1ms
+ ✓ tests/security/SEC-16.checkout-hoarding.test.ts > SEC-16 checkout hoarding limit > changing the capitals or adding spaces to the name does not get around the block 1ms
+ ✓ tests/security/SEC-16.checkout-hoarding.test.ts > SEC-16 checkout hoarding limit > one student being blocked does not affect anyone else 1ms
+ ✓ tests/security/SEC-16.checkout-hoarding.test.ts > SEC-16 checkout hoarding limit > checkouts for different events are counted separately 1ms
+ ✓ tests/security/SEC-16.checkout-hoarding.test.ts > SEC-16 through the orders API > the orders API answers a blocked student with status 429 and says when to try again 7ms
+
+ Test Files  17 passed (17)
+      Tests  83 passed (83)
+
+# Command: npm run build
+▲ Next.js 16.4.2 (Turbopack)
+✓ Compiled successfully in 14.5s
+  Finished TypeScript in 6.5s ...
