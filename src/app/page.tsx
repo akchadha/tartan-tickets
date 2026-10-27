@@ -1,12 +1,12 @@
 import { EventList } from "@/components/EventList";
-import { getEventStore } from "@/lib/events/store";
+import { getTicketing } from "@/lib/orders/service";
 import { listUpcomingEvents } from "@/lib/events/upcoming";
 
 // Work out "upcoming" on every visit, not once at build time.
 export const dynamic = "force-dynamic";
 
 export default async function HomePage() {
-  const events = listUpcomingEvents(getEventStore().all(), new Date());
+  const events = listUpcomingEvents(getTicketing().liveEvents(), new Date());
   return (
     <>
       <header className="masthead">

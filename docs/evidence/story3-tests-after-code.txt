@@ -1,0 +1,99 @@
+# Story 3 test run AFTER the Story 3 code was written
+# Command: npm test   Date: 2026-10-27T02:37Z
+
+ ✓ tests/story3/S3-ui.test.tsx > S3 checkout on screen > S3 clicking Buy tickets opens a checkout form with the name box focused 261ms
+ ✓ tests/story3/S3-ui.test.tsx > S3 checkout on screen > S3-AC1 the seat picker offers at most 4 seats 71ms
+ ✓ tests/story3/S3-ui.test.tsx > S3 checkout on screen > S3-AC1 the seat picker never offers more seats than are left 64ms
+ ✓ tests/story3/S3-ui.test.tsx > S3 checkout on screen > S3 a blank name is caught before anything is sent 103ms
+ ✓ tests/story3/S3-ui.test.tsx > S3 checkout on screen > S3 UX§6 double-clicking Hold seats creates only one hold 117ms
+ ✓ tests/story3/S3-ui.test.tsx > S3 checkout on screen > S3-AC2 after holding, shows when the hold ends and the server's total 134ms
+ ✓ tests/story3/S3-ui.test.tsx > S3 checkout on screen > S3-AC3 simulated payment shows a receipt with one QR code per ticket 165ms
+ ✓ tests/story3/S3-ui.test.tsx > S3 checkout on screen > S3-AC4 a declined payment tells the student the seats were released 116ms
+ ✓ tests/story3/S3-ui.test.tsx > S3 checkout on screen > S3-AC2 paying after the hold ran out shows the server's explanation 101ms
+ ✓ tests/story3/S3-ui.test.tsx > S3 checkout on screen > S3-AC5 selling out during checkout shows the waitlist message 113ms
+ ✓ tests/story3/S3-ui.test.tsx > S3 checkout on screen > S3 SEC-20 a typed name is shown as plain text on the receipt 137ms
+ ✓ tests/story1/S1-AC2.sold-out.test.tsx > S1-AC2 sold-out events > S1-AC2 replaces Buy with a disabled Sold out button 220ms
+ ✓ tests/story1/S1-AC2.sold-out.test.tsx > S1-AC2 sold-out events > S1-AC2 says Sold out once per event, not twice 20ms
+ ✓ tests/story1/S1-AC2.sold-out.test.tsx > S1-AC2 sold-out events > S1-AC2 still shows an enabled Buy button for events with seats 27ms
+ ✓ tests/story1/S1-AC2.sold-out.test.tsx > S1-AC2 sold-out events > S1-AC2 does not offer a waitlist yet (Story 4) 18ms
+ ✓ tests/story1/S1-AC2.sold-out.test.tsx > S1 Buy tickets opens checkout (Story 3 replaced the Story 1 placeholder) > S1 clicking Buy opens the checkout form 117ms
+ ✓ tests/story1/S1-AC2.sold-out.test.tsx > S1 Buy tickets opens checkout (Story 3 replaced the Story 1 placeholder) > S1 the Buy button is reachable with the keyboard alone 76ms
+ ✓ tests/story1/S1-AC1.page.test.tsx > S1-AC1 home page > S1-AC1 lists the sample events, including at least one sold out 275ms
+ ✓ tests/story1/S1-AC1.page.test.tsx > S1-AC1 home page > S1-AC1 sample data covers free, sold-out, nearly-full, and hidden events 2ms
+ ✓ tests/story1/S1-AC1.page.test.tsx > S1-AC1 home page > S1-AC1 the in-memory store returns copies, so callers cannot change stored data 2ms
+ ✓ tests/story1/S1-ux-states.test.tsx > S1 screen states > S1 empty state reads 'No upcoming events yet.' 37ms
+ ✓ tests/story1/S1-ux-states.test.tsx > S1 screen states > S1 loading state is announced to screen readers 146ms
+ ✓ tests/story1/S1-ux-states.test.tsx > S1 screen states > S1 error state explains the problem and offers a retry 49ms
+ ✓ tests/story1/S1-AC1.event-list.test.tsx > S1-AC1 event list on screen > S1-AC1 shows title, club, date, location, price, and seats remaining for each event 221ms
+ ✓ tests/story1/S1-AC1.event-list.test.tsx > S1-AC1 event list on screen > S1-AC1 shows every event it is given, in the given order 27ms
+ ✓ tests/story1/S1-AC1.event-list.test.tsx > S1-AC1 event list on screen > S1-AC1 SEC-20 shows officer-entered text as plain text, never as code 19ms
+ ✓ tests/story3/S3-shared-state.test.ts > S3 shared in-memory state > S3-AC2 the page and every API route see the same seat counts 59ms
+ ✓ tests/story3/S3-api.test.ts > S3 POST /api/orders > S3-AC2 returns 201 with a held order 32ms
+ ✓ tests/story3/S3-api.test.ts > S3 POST /api/orders > S3-AC1 returns 400 for more than 4 seats 1ms
+ ✓ tests/story3/S3-api.test.ts > S3 POST /api/orders > S3 returns 401 when no name is typed, including only spaces 1ms
+ ✓ tests/story3/S3-api.test.ts > S3 POST /api/orders > S3 returns 400 for a name longer than 80 characters 1ms
+ ✓ tests/story3/S3-api.test.ts > S3 POST /api/orders > S3-AC5 returns 409 when the event is sold out 1ms
+ ✓ tests/story3/S3-api.test.ts > S3 POST /api/orders > S3 returns 404 for an unknown event and 400 for a malformed body 2ms
+ ✓ tests/story3/S3-api.test.ts > S3 POST /api/orders > S3 SEC-8 ignores any price or total sent by the browser 1ms
+ ✓ tests/story3/S3-api.test.ts > S3 POST /api/orders > S3 §8 fifty simultaneous buyers for the last seat produce exactly one success 5ms
+ ✓ tests/story3/S3-api.test.ts > S3 order follow-up routes > S3-AC3 pay returns 200 with tickets; GET shows the paid order 2ms
+ ✓ tests/story3/S3-api.test.ts > S3 order follow-up routes > S3-AC4 decline returns 200 and releases the seats 1ms
+ ✓ tests/story3/S3-api.test.ts > S3 order follow-up routes > S3 unknown order ids return 404 1ms
+ ✓ tests/story1/S1-AC1.api.test.ts > S1-AC1 GET /api/events > S1-AC1 returns 200 with upcoming events and their browse fields 34ms
+ ✓ tests/story3/S3-AC3.payment.test.ts > S3-AC3 simulated payment issues tickets > S3-AC3 issues exactly one ticket per seat and marks the order paid 3ms
+ ✓ tests/story3/S3-AC3.payment.test.ts > S3-AC3 simulated payment issues tickets > S3-AC3 SEC-13 each QR code is unique, random (≥128 bits), and contains no personal data 1ms
+ ✓ tests/story3/S3-AC3.payment.test.ts > S3-AC3 simulated payment issues tickets > S3-AC3 the server computes the total from the stored price 0ms
+ ✓ tests/story3/S3-AC3.payment.test.ts > S3-AC3 simulated payment issues tickets > S3-AC3 paying twice is refused and never doubles the tickets 2ms
+ ✓ tests/story3/S3-AC3.payment.test.ts > S3-AC3 simulated payment issues tickets > S3-AC3 paid seats stay sold after the 10-minute hold window 1ms
+ ✓ tests/story3/S3-AC3.payment.test.ts > S3-AC3 simulated payment issues tickets > S3-AC3 free events go through the same checkout with a $0 total 0ms
+ ✓ tests/story3/S3-AC1.cap.test.ts > S3-AC1 order cap of 4 seats > S3-AC1 accepts orders of 1, 2, 3, and 4 seats 3ms
+ ✓ tests/story3/S3-AC1.cap.test.ts > S3-AC1 order cap of 4 seats > S3-AC1 refuses an order for 5 seats with status 400 1ms
+ ✓ tests/story3/S3-AC1.cap.test.ts > S3-AC1 order cap of 4 seats > S3-AC1 refuses zero, negative, decimal, text, and missing seat counts 1ms
+ ✓ tests/story3/S3-AC2.hold.test.ts > S3-AC2 10-minute seat hold > S3-AC2 starting checkout lowers seats left for everyone immediately 3ms
+ ✓ tests/story3/S3-AC2.hold.test.ts > S3-AC2 10-minute seat hold > S3-AC2 the hold ends exactly 10 minutes after checkout starts 0ms
+ ✓ tests/story3/S3-AC2.hold.test.ts > S3-AC2 10-minute seat hold > S3-AC2 seats are still held at 9:59 and come back at 10:00 0ms
+ ✓ tests/story3/S3-AC2.hold.test.ts > S3-AC2 10-minute seat hold > S3-AC2 paying after the hold expired is refused and issues no tickets 2ms
+ ✓ tests/story3/S3-AC2.hold.test.ts > S3-AC2 10-minute seat hold > S3-AC2 held seats cannot be taken by another student 1ms
+ ✓ tests/story3/S3-AC4.decline.test.ts > S3-AC4 declined payment > S3-AC4 a declined payment releases the held seats immediately 4ms
+ ✓ tests/story3/S3-AC4.decline.test.ts > S3-AC4 declined payment > S3-AC4 a declined order cannot be paid afterwards 1ms
+ ✓ tests/story1/S1-AC1.upcoming.test.ts > S1-AC1 which events are listed > S1-AC1 lists published events that have not started, soonest first 2ms
+ ✓ tests/story1/S1-AC1.upcoming.test.ts > S1-AC1 which events are listed > S1-AC1 hides events that have already started 0ms
+ ✓ tests/story1/S1-AC1.upcoming.test.ts > S1-AC1 which events are listed > S1-AC1 hides cancelled and draft events 0ms
+ ✓ tests/story1/S1-AC1.upcoming.test.ts > S1-AC1 which events are listed > S1-AC1 computes seats remaining as capacity minus seats sold 0ms
+ ✓ tests/story1/S1-AC1.upcoming.test.ts > S1-AC1 which events are listed > S1-AC1 never reports negative seats, and marks zero as sold out 0ms
+ ✓ tests/story1/S1-AC1.upcoming.test.ts > S1-AC1 which events are listed > S1-AC1 exposes only browse fields (no internal counts or status) 0ms
+ ✓ tests/story3/S3-AC5.sold-out.test.ts > S3-AC5 selling out during checkout > S3-AC5 when another student takes the last seats first, the hold is refused with a sold-out message 3ms
+ ✓ tests/story3/S3-AC5.sold-out.test.ts > S3-AC5 selling out during checkout > S3-AC5 when fewer seats remain than requested, the student is told how many are left 1ms
+ ✓ tests/story1/S1-AC1.format.test.ts > S1-AC1 price > S1-AC1 shows dollars and cents 2ms
+ ✓ tests/story1/S1-AC1.format.test.ts > S1-AC1 price > S1-AC1 shows Free for $0 events 0ms
+ ✓ tests/story1/S1-AC1.format.test.ts > S1-AC1 date > S1-AC1 shows Pittsburgh time during daylight saving 0ms
+ ✓ tests/story1/S1-AC1.format.test.ts > S1-AC1 date > S1-AC1 shows Pittsburgh time in winter, including the date rolling back 0ms
+ ✓ tests/story1/S1-AC1.format.test.ts > S1-AC1 seats remaining > S1-AC1 shows the exact count 0ms
+ ✓ tests/story1/S1-AC1.format.test.ts > S1-AC1 seats remaining > S1-AC1 uses the singular for one seat 0ms
+ ✓ tests/story1/S1-AC1.format.test.ts > S1-AC1 seats remaining > S1-AC1 shows Sold out at zero 0ms
+ ✓ tests/story1/S1-a11y.test.ts > S1 colour contrast > S1 contrast calculator matches the WCAG reference values 2ms
+ ✓ tests/story1/S1-a11y.test.ts > S1 colour contrast > S1 body text on surface is at least 4.5:1 0ms
+ ✓ tests/story1/S1-a11y.test.ts > S1 colour contrast > S1 body text on page background is at least 4.5:1 0ms
+ ✓ tests/story1/S1-a11y.test.ts > S1 colour contrast > S1 secondary text on surface is at least 4.5:1 0ms
+ ✓ tests/story1/S1-a11y.test.ts > S1 colour contrast > S1 secondary text on page background is at least 4.5:1 0ms
+ ✓ tests/story1/S1-a11y.test.ts > S1 colour contrast > S1 button text on accent is at least 4.5:1 0ms
+ ✓ tests/story1/S1-a11y.test.ts > S1 colour contrast > S1 accent text on surface is at least 4.5:1 0ms
+
+ Test Files  16 passed (16)
+      Tests  77 passed (77)
+
+# Command: npm run build
+▲ Next.js 16.4.2 (Turbopack)
+✓ Running next.config.ts took 78ms
+✓ Compiled successfully in 8.6s
+  Finished TypeScript in 6.2s ...
+✓ Generating static pages using 1 worker (3/3) in 144ms
+Route (app)
+┌ ƒ /
+├ ○ /_not-found
+├ ƒ /api/events
+├ ƒ /api/orders
+├ ƒ /api/orders/[id]
+├ ƒ /api/orders/[id]/decline
+└ ƒ /api/orders/[id]/pay
+○  (Static)   prerendered as static content

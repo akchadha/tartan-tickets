@@ -38,11 +38,11 @@ describe("S1-AC2 sold-out events", () => {
   });
 });
 
-describe("S1 scope: Buy is a placeholder until Story 3", () => {
-  it("S1 clicking Buy tells the student checkout is not available yet", async () => {
+describe("S1 Buy tickets opens checkout (Story 3 replaced the Story 1 placeholder)", () => {
+  it("S1 clicking Buy opens the checkout form", async () => {
     render(<EventList events={[available]} />);
     await userEvent.click(screen.getByRole("button", { name: "Buy tickets" }));
-    expect(screen.getByRole("status")).toHaveTextContent("Checkout isn't open yet. Ticket sales arrive in the next update.");
+    expect(screen.getByRole("textbox", { name: "Your name" })).toBeInTheDocument();
   });
 
   it("S1 the Buy button is reachable with the keyboard alone", async () => {
@@ -50,6 +50,6 @@ describe("S1 scope: Buy is a placeholder until Story 3", () => {
     await userEvent.tab();
     expect(screen.getByRole("button", { name: "Buy tickets" })).toHaveFocus();
     await userEvent.keyboard("{Enter}");
-    expect(screen.getByRole("status")).toHaveTextContent(/isn't open yet/);
+    expect(screen.getByRole("textbox", { name: "Your name" })).toBeInTheDocument();
   });
 });

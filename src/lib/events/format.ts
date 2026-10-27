@@ -30,3 +30,8 @@ export function formatSeats(seatsRemaining: number): string {
   if (seatsRemaining <= 0) return "Sold out";
   return seatsRemaining === 1 ? "1 seat left" : `${seatsRemaining} seats left`;
 }
+
+/** e.g. "7:42 PM" in Pittsburgh time. */
+export function formatTime(isoUtc: string): string {
+  return timePart.format(new Date(isoUtc)).replace(/\u202f/g, " ");
+}
